@@ -1,0 +1,567 @@
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { Bus, Route, Users, BarChart3, LogOut, Plus, Edit, Trash2 } from 'lucide-react';
+import Layout from '../layout/Layout';
+
+const AdminDashboard = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('overview');
+  const [buses, setBuses] = useState([]);
+  const [routes, setRoutes] = useState([]);
+  const [showBusForm, setShowBusForm] = useState(false);
+  const [showRouteForm, setShowRouteForm] = useState(false);
+  const [editingBus, setEditingBus] = useState(null);
+  const [editingRoute, setEditingRoute] = useState(null);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = () => {
+    const savedBuses = localStorage.getItem('buses');
+    const savedRoutes = localStorage.getItem('routes');
+    
+    if (savedBuses) setBuses(JSON.parse(savedBuses));
+    if (savedRoutes) setRoutes(JSON.parse(savedRoutes));
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
+  const handleAddBus = (busData) => {
+    const newBus = { ...busData, id: `bus-${Date.now()}` };
+    const updatedBuses = [...buses, newBus];
+    setBuses(updatedBuses);
+    localStorage.setItem('buses', JSON.stringify(updatedBuses));
+    setShowBusForm(false);
+  };
+
+  const handleEditBus = (busData) => {
+    if (editingBus) {
+      const updatedBuses = buses.map(bus => 
+        bus.id === editingBus.id ? { ...busData, id: editingBus.id } : bus
+      );
+      setBuses(updatedBuses);
+      localStorage.setItem('buses', JSON.stringify(updatedBuses));
+      setEditingBus(null);
+      setShowBusForm(false);
+    }
+  };
+
+  const handleDeleteBus = (id) => {
+    const updatedBuses = buses.filter(bus => bus.id !== id);
+    setBuses(updatedBuses);
+    localStorage.setItem('buses', JSON.stringify(updatedBuses));
+  };
+
+  const handleAddRoute = (routeData) => {
+    const newRoute = { ...routeData, id: `route-${Date.now()}` };
+    const updatedRoutes = [...routes, newRoute];
+    setRoutes(updatedRoutes);
+    localStorage.setItem('routes', JSON.stringify(updatedRoutes));
+    setShowRouteForm(false);
+  };
+
+  const handleEditRoute = (routeData) => {
+    if (editingRoute) {
+      const updatedRoutes = routes.map(route => 
+        route.id === editingRoute.id ? { ...routeData, id: editingRoute.id } : route
+      );
+      setRoutes(updatedRoutes);
+      localStorage.setItem('routes', JSON.stringify(updatedRoutes));
+      setEditingRoute(null);
+      setShowRouteForm(false);
+    }
+  };
+
+  const handleDeleteRoute = (id) => {
+    const updatedRoutes = routes.filter(route => route.id !== id);
+    setRoutes(updatedRoutes);
+    localStorage.setItem('routes', JSON.stringify(updatedRoutes));
+  };
+
+  return (
+    <Layout showFooter={false}>
+      <div className="min-h-screen bg-gray-50">
+        {/* Page Header */}
+        <div className="bg-white shadow-sm border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Bus className="h-8 w-8 text-blue-600 mr-3" />
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+                  <p className="text-gray-600">Manage your bus booking system</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-4">
+                <span className="text-gray-700">Welcome, {user?.name}</span>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center text-gray-600 hover:text-red-600 transition-colors"
+                >
+                  <LogOut className="h-5 w-5 mr-1" />
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Navigation Tabs */}
+          <div className="mb-8">
+            <nav className="flex space-x-8">
+              {[
+                { id: 'overview', label: 'Overview', icon: BarChart3 },
+                { id: 'buses', label: 'Bus Management', icon: Bus },
+                { id: 'routes', label: 'Route Management', icon: Route }
+              ].map((tab) => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                      activeTab === tab.id
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                  >
+                    <Icon className="h-5 w-5 mr-2" />
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
+
+          {/* Overview Tab */}
+          {activeTab === 'overview' && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center">
+                  <Bus className="h-12 w-12 text-blue-600" />
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600">Total Buses</p>
+                    <p className="text-2xl font-bold text-gray-900">{buses.length}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center">
+                  <Route className="h-12 w-12 text-green-600" />
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600">Total Routes</p>
+                    <p className="text-2xl font-bold text-gray-900">{routes.length}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center">
+                  <Users className="h-12 w-12 text-purple-600" />
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600">Active Buses</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {buses.filter(bus => bus.status === 'active').length}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Bus Management Tab */}
+          {activeTab === 'buses' && (
+            <div>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-gray-900">Bus Management</h2>
+                <button
+                  onClick={() => setShowBusForm(true)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center transition-colors"
+                >
+                  <Plus className="h-5 w-5 mr-2" />
+                  Add Bus
+                </button>
+              </div>
+
+              <div className="bg-white rounded-lg shadow overflow-hidden">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Bus Number
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Capacity
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Type
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {buses.map((bus) => (
+                      <tr key={bus.id}>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {bus.busNumber}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {bus.capacity}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {bus.type}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            bus.status === 'active' 
+                              ? 'bg-green-100 text-green-800' 
+                              : 'bg-yellow-100 text-yellow-800'
+                          }`}>
+                            {bus.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <button
+                            onClick={() => {
+                              setEditingBus(bus);
+                              setShowBusForm(true);
+                            }}
+                            className="text-blue-600 hover:text-blue-900 mr-3"
+                          >
+                            <Edit className="h-5 w-5" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteBus(bus.id)}
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            <Trash2 className="h-5 w-5" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* Route Management Tab */}
+          {activeTab === 'routes' && (
+            <div>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-gray-900">Route Management</h2>
+                <button
+                  onClick={() => setShowRouteForm(true)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center transition-colors"
+                >
+                  <Plus className="h-5 w-5 mr-2" />
+                  Add Route
+                </button>
+              </div>
+
+              <div className="bg-white rounded-lg shadow overflow-hidden">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        From
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        To
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Distance
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Duration
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Price
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {routes.map((route) => (
+                      <tr key={route.id}>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {route.from}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {route.to}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {route.distance} km
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {route.duration}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          ₹{route.price}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <button
+                            onClick={() => {
+                              setEditingRoute(route);
+                              setShowRouteForm(true);
+                            }}
+                            className="text-blue-600 hover:text-blue-900 mr-3"
+                          >
+                            <Edit className="h-5 w-5" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteRoute(route.id)}
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            <Trash2 className="h-5 w-5" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Bus Form Modal */}
+        {showBusForm && (
+          <BusFormModal
+            bus={editingBus}
+            onSubmit={editingBus ? handleEditBus : handleAddBus}
+            onClose={() => {
+              setShowBusForm(false);
+              setEditingBus(null);
+            }}
+          />
+        )}
+
+        {/* Route Form Modal */}
+        {showRouteForm && (
+          <RouteFormModal
+            route={editingRoute}
+            onSubmit={editingRoute ? handleEditRoute : handleAddRoute}
+            onClose={() => {
+              setShowRouteForm(false);
+              setEditingRoute(null);
+            }}
+          />
+        )}
+      </div>
+    </Layout>
+  );
+};
+
+// Bus Form Modal Component
+const BusFormModal = ({ bus, onSubmit, onClose }) => {
+  const [formData, setFormData] = useState({
+    busNumber: bus?.busNumber || '',
+    capacity: bus?.capacity || 0,
+    type: bus?.type || 'AC',
+    status: bus?.status || 'active'
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(formData);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-md">
+        <h3 className="text-lg font-medium text-gray-900 mb-4">
+          {bus ? 'Edit Bus' : 'Add New Bus'}
+        </h3>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Bus Number
+            </label>
+            <input
+              type="text"
+              value={formData.busNumber}
+              onChange={(e) => setFormData({ ...formData, busNumber: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Capacity
+            </label>
+            <input
+              type="number"
+              value={formData.capacity}
+              onChange={(e) => setFormData({ ...formData, capacity: parseInt(e.target.value) })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Type
+            </label>
+            <select
+              value={formData.type}
+              onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="AC">AC</option>
+              <option value="Non-AC">Non-AC</option>
+              <option value="Sleeper">Sleeper</option>
+              <option value="Semi-Sleeper">Semi-Sleeper</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Status
+            </label>
+            <select
+              value={formData.status}
+              onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="active">Active</option>
+              <option value="maintenance">Maintenance</option>
+            </select>
+          </div>
+          <div className="flex justify-end space-x-3 pt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            >
+              {bus ? 'Update' : 'Add'} Bus
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// Route Form Modal Component
+const RouteFormModal = ({ route, onSubmit, onClose }) => {
+  const [formData, setFormData] = useState({
+    from: route?.from || '',
+    to: route?.to || '',
+    distance: route?.distance || 0,
+    duration: route?.duration || '',
+    price: route?.price || 0
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(formData);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-md">
+        <h3 className="text-lg font-medium text-gray-900 mb-4">
+          {route ? 'Edit Route' : 'Add New Route'}
+        </h3>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              From
+            </label>
+            <input
+              type="text"
+              value={formData.from}
+              onChange={(e) => setFormData({ ...formData, from: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              To
+            </label>
+            <input
+              type="text"
+              value={formData.to}
+              onChange={(e) => setFormData({ ...formData, to: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Distance (km)
+            </label>
+            <input
+              type="number"
+              value={formData.distance}
+              onChange={(e) => setFormData({ ...formData, distance: parseInt(e.target.value) })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Duration
+            </label>
+            <input
+              type="text"
+              value={formData.duration}
+              onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+              placeholder="e.g., 5h 30m"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Price (₹)
+            </label>
+            <input
+              type="number"
+              value={formData.price}
+              onChange={(e) => setFormData({ ...formData, price: parseInt(e.target.value) })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div className="flex justify-end space-x-3 pt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            >
+              {route ? 'Update' : 'Add'} Route
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default AdminDashboard;
