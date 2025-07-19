@@ -29,7 +29,7 @@ const Header = () => {
             onClick={() => navigate('/')}
           >
             <Bus className="h-8 w-8 text-blue-600 mr-3" />
-            <h1 className="text-2xl font-bold text-gray-900">BusBook</h1>
+            <h1 className="text-2xl font-bold text-gray-900">BusBuddy</h1>
           </div>
 
           {/* Navigation */}

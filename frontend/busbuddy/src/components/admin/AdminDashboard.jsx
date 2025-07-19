@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Bus, Route, Users, BarChart3, LogOut, Plus, Edit, Trash2 } from 'lucide-react';
 import Layout from '../layout/Layout';
@@ -119,7 +119,8 @@ const AdminDashboard = () => {
               {[
                 { id: 'overview', label: 'Overview', icon: BarChart3 },
                 { id: 'buses', label: 'Bus Management', icon: Bus },
-                { id: 'routes', label: 'Route Management', icon: Route }
+                { id: 'routes', label: 'Route Management', icon: Route },
+                { id: 'refunds', label: 'Refund Management', icon: Users }
               ].map((tab) => {
                 const Icon = tab.icon;
                 return (
@@ -142,7 +143,7 @@ const AdminDashboard = () => {
 
           {/* Overview Tab */}
           {activeTab === 'overview' && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex items-center">
                   <Bus className="h-12 w-12 text-blue-600" />
@@ -168,6 +169,21 @@ const AdminDashboard = () => {
                     <p className="text-sm font-medium text-gray-600">Active Buses</p>
                     <p className="text-2xl font-bold text-gray-900">
                       {buses.filter(bus => bus.status === 'active').length}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center">
+                  <Users className="h-12 w-12 text-orange-600" />
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600">Pending Refunds</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {(() => {
+                        const savedRefunds = localStorage.getItem('refunds');
+                        const allRefunds = savedRefunds ? JSON.parse(savedRefunds) : [];
+                        return allRefunds.filter(refund => refund.status === 'pending').length;
+                      })()}
                     </p>
                   </div>
                 </div>
@@ -336,6 +352,11 @@ const AdminDashboard = () => {
               </div>
             </div>
           )}
+
+          {/* Refund Management Tab */}
+          {activeTab === 'refunds' && (
+            <RefundManagement />
+          )}
         </div>
 
         {/* Bus Form Modal */}
@@ -363,6 +384,258 @@ const AdminDashboard = () => {
         )}
       </div>
     </Layout>
+  );
+};
+
+// Refund Management Component
+const RefundManagement = () => {
+  const [refunds, setRefunds] = useState([]);
+  const [loading, setLoading] = useState({});
+
+  useEffect(() => {
+    loadRefunds();
+  }, []);
+
+  const loadRefunds = () => {
+    const savedRefunds = localStorage.getItem('refunds');
+    if (savedRefunds) {
+      setRefunds(JSON.parse(savedRefunds));
+    }
+  };
+
+  const handleRefundAction = async (refundId, action) => {
+    setLoading(prev => ({ ...prev, [refundId]: true }));
+
+    // Simulate processing delay
+    setTimeout(() => {
+      const savedRefunds = localStorage.getItem('refunds');
+      if (savedRefunds) {
+        const allRefunds = JSON.parse(savedRefunds);
+        const updatedRefunds = allRefunds.map(refund =>
+          refund.id === refundId
+            ? {
+                ...refund,
+                status: action,
+                processedDate: new Date().toISOString(),
+                processedBy: 'admin'
+              }
+            : refund
+        );
+        
+        localStorage.setItem('refunds', JSON.stringify(updatedRefunds));
+        setRefunds(updatedRefunds);
+      }
+      
+      setLoading(prev => ({ ...prev, [refundId]: false }));
+    }, 1000);
+  };
+
+  const pendingRefunds = refunds.filter(refund => refund.status === 'pending');
+  const processedRefunds = refunds.filter(refund => refund.status !== 'pending');
+
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-900">Refund Management</h2>
+        <div className="flex items-center space-x-4 text-sm">
+          <div className="flex items-center">
+            <div className="w-3 h-3 bg-yellow-400 rounded-full mr-2"></div>
+            <span>Pending: {pendingRefunds.length}</span>
+          </div>
+          <div className="flex items-center">
+            <div className="w-3 h-3 bg-green-400 rounded-full mr-2"></div>
+            <span>Processed: {processedRefunds.length}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Pending Refunds Section */}
+      {pendingRefunds.length > 0 && (
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+            <div className="w-3 h-3 bg-yellow-400 rounded-full mr-2"></div>
+            Pending Refund Requests ({pendingRefunds.length})
+          </h3>
+          <div className="space-y-4">
+            {pendingRefunds.map((refund) => (
+              <div key={refund.id} className="bg-white rounded-lg shadow border-l-4 border-yellow-400 p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-900">
+                      Refund Request #{refund.id.slice(-8).toUpperCase()}
+                    </h4>
+                    <p className="text-sm text-gray-600">
+                      Requested on: {new Date(refund.requestDate).toLocaleDateString()} at {new Date(refund.requestDate).toLocaleTimeString()}
+                    </p>
+                  </div>
+                  <span className="px-3 py-1 text-sm font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                    PENDING REVIEW
+                  </span>
+                </div>
+
+                {/* Passenger Information */}
+                <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                  <h5 className="font-medium text-gray-900 mb-2">Passenger Information</h5>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                    <div>
+                      <span className="text-gray-600">Name:</span>
+                      <p className="font-medium">{refund.booking.passengerName}</p>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Phone:</span>
+                      <p className="font-medium">{refund.booking.passengerPhone}</p>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Passenger ID:</span>
+                      <p className="font-medium font-mono text-xs">{refund.passengerId}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Booking Details */}
+                <div className="bg-blue-50 rounded-lg p-4 mb-4">
+                  <h5 className="font-medium text-blue-900 mb-2">Original Booking Details</h5>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div>
+                      <span className="text-blue-700">Route:</span>
+                      <p className="font-medium text-blue-900">{refund.booking.route.from} → {refund.booking.route.to}</p>
+                    </div>
+                    <div>
+                      <span className="text-blue-700">Seat Number:</span>
+                      <p className="font-medium text-blue-900">{refund.booking.seatNumber}</p>
+                    </div>
+                    <div>
+                      <span className="text-blue-700">Travel Date:</span>
+                      <p className="font-medium text-blue-900">{new Date(refund.booking.travelDate).toLocaleDateString()}</p>
+                    </div>
+                    <div>
+                      <span className="text-blue-700">Booking Date:</span>
+                      <p className="font-medium text-blue-900">{new Date(refund.booking.bookingDate).toLocaleDateString()}</p>
+                    </div>
+                  </div>
+                  <div className="mt-3 pt-3 border-t border-blue-200">
+                    <div className="flex justify-between items-center">
+                      <span className="text-blue-700">Booking ID:</span>
+                      <span className="font-mono text-sm bg-blue-100 px-2 py-1 rounded">{refund.bookingId.slice(-8).toUpperCase()}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Refund Amount */}
+                <div className="bg-green-50 rounded-lg p-4 mb-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-green-700 font-medium">Refund Amount:</span>
+                    <span className="text-2xl font-bold text-green-600">₹{refund.amount}</span>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex justify-end space-x-3">
+                  <button
+                    onClick={() => handleRefundAction(refund.id, 'rejected')}
+                    disabled={loading[refund.id]}
+                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors disabled:opacity-50 flex items-center"
+                  >
+                    {loading[refund.id] ? (
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    ) : null}
+                    Reject Refund
+                  </button>
+                  <button
+                    onClick={() => handleRefundAction(refund.id, 'approved')}
+                    disabled={loading[refund.id]}
+                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors disabled:opacity-50 flex items-center"
+                  >
+                    {loading[refund.id] ? (
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    ) : null}
+                    Approve Refund
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Processed Refunds Section */}
+      {processedRefunds.length > 0 && (
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+            <div className="w-3 h-3 bg-green-400 rounded-full mr-2"></div>
+            Processed Refunds ({processedRefunds.length})
+          </h3>
+          <div className="bg-white rounded-lg shadow overflow-hidden">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Refund ID
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Passenger
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Route
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Amount
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Processed Date
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {processedRefunds.map((refund) => (
+                  <tr key={refund.id}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">
+                      {refund.id.slice(-8).toUpperCase()}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <div>
+                        <div className="font-medium">{refund.booking.passengerName}</div>
+                        <div className="text-gray-500">{refund.booking.passengerPhone}</div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {refund.booking.route.from} → {refund.booking.route.to}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">
+                      ₹{refund.amount}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                        refund.status === 'approved' 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-red-100 text-red-800'
+                      }`}>
+                        {refund.status.toUpperCase()}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {refund.processedDate ? new Date(refund.processedDate).toLocaleDateString() : '-'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* No Refunds Message */}
+      {refunds.length === 0 && (
+        <div className="bg-white rounded-lg shadow p-8 text-center">
+          <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+          <p className="text-gray-500 text-lg">No refund requests found</p>
+          <p className="text-gray-400 text-sm mt-2">Refund requests will appear here when passengers cancel bookings</p>
+        </div>
+      )}
+    </div>
   );
 };
 

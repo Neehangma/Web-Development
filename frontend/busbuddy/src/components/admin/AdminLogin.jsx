@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { LogIn, Bus } from 'lucide-react';
 import Layout from '../layout/Layout';
@@ -38,14 +38,6 @@ const AdminLogin = () => {
             </div>
             <h2 className="text-3xl font-bold text-gray-900">Admin Login</h2>
             <p className="text-gray-600 mt-2">Access your admin dashboard</p>
-          </div>
-
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <p className="text-blue-800 text-sm">
-              <strong>Demo Credentials:</strong><br />
-              Email: admin@busbook.com<br />
-              Password: admin123
-            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
