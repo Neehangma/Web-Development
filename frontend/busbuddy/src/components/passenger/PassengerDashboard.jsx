@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Bus, Calendar, Clock, MapPin, LogOut, Plus, Trash2, User, CreditCard } from 'lucide-react';
+
 import Layout from '../layout/Layout';
 import PaymentModal from './PaymentModal';
+// If you extract BookingFormModal, import it here:
+// import BookingFormModal from './BookingFormModal';
 
 const PassengerDashboard = () => {
   const { user, logout } = useAuth();
@@ -16,9 +20,15 @@ const PassengerDashboard = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [pendingBooking, setPendingBooking] = useState(null);
 
+
   useEffect(() => {
+    if (!user) {
+      navigate('/passenger/login');
+      return;
+    }
     loadData();
-  }, []);
+    // eslint-disable-next-line
+  }, [user]);
 
   const loadData = () => {
     // Load routes
@@ -155,7 +165,6 @@ const PassengerDashboard = () => {
           {activeTab === 'book' && (
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Available Routes</h2>
-              
               {routes.length === 0 ? (
                 <div className="bg-white rounded-lg shadow p-8 text-center">
                   <Bus className="h-16 w-16 text-gray-400 mx-auto mb-4" />
@@ -174,7 +183,6 @@ const PassengerDashboard = () => {
                           <span className="font-medium">{route.to}</span>
                         </div>
                       </div>
-                      
                       <div className="space-y-2 text-sm text-gray-600 mb-4">
                         <div className="flex items-center">
                           <Clock className="h-4 w-4 mr-2" />
@@ -184,7 +192,6 @@ const PassengerDashboard = () => {
                           <span>Distance: {route.distance} km</span>
                         </div>
                       </div>
-
                       <div className="flex items-center justify-between">
                         <div className="text-2xl font-bold text-green-600">
                           ₹{route.price}
@@ -211,7 +218,6 @@ const PassengerDashboard = () => {
           {activeTab === 'bookings' && (
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6">My Bookings</h2>
-              
               {bookings.length === 0 ? (
                 <div className="bg-white rounded-lg shadow p-8 text-center">
                   <Calendar className="h-16 w-16 text-gray-400 mx-auto mb-4" />
@@ -243,7 +249,6 @@ const PassengerDashboard = () => {
                               {booking.status.toUpperCase()}
                             </span>
                           </div>
-                          
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
                             <div>
                               <span className="font-medium">Passenger:</span><br />
@@ -262,7 +267,6 @@ const PassengerDashboard = () => {
                               {new Date(booking.travelDate).toLocaleDateString()}
                             </div>
                           </div>
-                          
                           <div className="mt-4 flex items-center justify-between">
                             <div className="text-lg font-bold text-green-600">
                               ₹{booking.route.price}
@@ -272,7 +276,6 @@ const PassengerDashboard = () => {
                             </div>
                           </div>
                         </div>
-                        
                         {booking.status === 'confirmed' && (
                           <button
                             onClick={() => handleCancelBooking(booking.id)}
@@ -328,7 +331,8 @@ const PassengerDashboard = () => {
   );
 };
 
-// Booking Form Modal Component
+
+// BookingFormModal remains here for now, but should be extracted to its own file for clarity.
 const BookingFormModal = ({ route, onSubmit, onClose }) => {
   const [formData, setFormData] = useState({
     passengerName: '',
@@ -359,7 +363,6 @@ const BookingFormModal = ({ route, onSubmit, onClose }) => {
         <h3 className="text-lg font-medium text-gray-900 mb-4">
           Book Ticket: {route.from} → {route.to}
         </h3>
-        
         <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
           <div className="text-sm text-green-800">
             <p><strong>Route:</strong> {route.from} to {route.to}</p>
@@ -367,7 +370,6 @@ const BookingFormModal = ({ route, onSubmit, onClose }) => {
             <p><strong>Price:</strong> ₹{route.price}</p>
           </div>
         </div>
-
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -382,7 +384,6 @@ const BookingFormModal = ({ route, onSubmit, onClose }) => {
               required
             />
           </div>
-          
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Phone Number
@@ -396,7 +397,6 @@ const BookingFormModal = ({ route, onSubmit, onClose }) => {
               required
             />
           </div>
-          
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Preferred Seat Number
@@ -414,7 +414,6 @@ const BookingFormModal = ({ route, onSubmit, onClose }) => {
               ))}
             </select>
           </div>
-          
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Travel Date
@@ -429,7 +428,6 @@ const BookingFormModal = ({ route, onSubmit, onClose }) => {
               required
             />
           </div>
-          
           <div className="flex justify-end space-x-3 pt-4">
             <button
               type="button"
@@ -449,6 +447,12 @@ const BookingFormModal = ({ route, onSubmit, onClose }) => {
       </div>
     </div>
   );
+};
+
+BookingFormModal.propTypes = {
+  route: PropTypes.object.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default PassengerDashboard;
