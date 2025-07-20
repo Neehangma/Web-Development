@@ -60,15 +60,15 @@ const Home = () => {
                   { from: 'Chitwan', to: 'Dharan', price: 'Rs.1300', duration: '4h 15m' },
                   { from: 'Biratnagar', to: 'Kathmandu', price: 'Rs.1800', duration: '12h 45m' }
                 ].map((route, index) => (
-                  <div key={index} className="bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                  <div key={index} className="bg-primary-light/30 rounded-lg p-6 hover:shadow-lg transition-shadow">
                     <div className="flex items-center justify-between mb-4">
-                      <span className="font-semibold text-gray-900">{route.from}</span>
-                      <span className="text-gray-400">→</span>
-                      <span className="font-semibold text-gray-900">{route.to}</span>
+                      <span className="font-semibold text-primary-dark">{route.from}</span>
+                      <span className="text-accent">→</span>
+                      <span className="font-semibold text-primary-dark">{route.to}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-blue-600 font-bold text-lg">{route.price}</span>
-                      <span className="text-gray-500 text-sm">{route.duration}</span>
+                      <span className="text-accent font-bold text-lg">{route.price}</span>
+                      <span className="text-primary text-sm">{route.duration}</span>
                     </div>
                   </div>
                 ))}
