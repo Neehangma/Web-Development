@@ -22,7 +22,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-white shadow-lg border-b sticky top-0 z-50">
+    <header className="bg-gray-900 text-white shadow-lg border-b sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -31,21 +31,21 @@ const Header = () => {
             onClick={() => navigate('/')}
           >
             <Bus className="h-8 w-8 text-blue-600 mr-3" />
-            <h1 className="text-2xl font-bold text-gray-900">BusBuddy</h1>
+            <h1 className="text-2xl font-bold text-white">BusBuddy</h1>
           </div>
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <button
               onClick={() => navigate('/')}
-              className="text-gray-700 hover:text-blue-600 transition-colors"
+              className="text-white hover:text-blue-400 transition-colors"
             >
               Home
             </button>
-            <button className="text-gray-700 hover:text-blue-600 transition-colors">
+            <button className="text-white hover:text-blue-400 transition-colors">
               About
             </button>
-            <button className="text-gray-700 hover:text-blue-600 transition-colors">
+            <button className="text-white hover:text-blue-400 transition-colors">
               Contact
             </button>
           </nav>
@@ -96,11 +96,11 @@ const Header = () => {
                 <div className="relative">
                   <button
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition-colors"
+                    className="flex items-center space-x-2 border border-blue-400 text-white hover:bg-blue-500 hover:text-white hover:border-blue-500 px-4 py-2 rounded-full font-semibold shadow-sm transition-colors duration-200 bg-transparent"
                   >
-                    <UserPlus className="h-4 w-4" />
+                    <UserPlus className="h-4 w-4 text-blue-400" />
                     <span>Register</span>
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown className="h-4 w-4 text-blue-400" />
                   </button>
 
                   {showDropdown && (
@@ -120,11 +120,11 @@ const Header = () => {
                 <div className="relative">
                   <button
                     onClick={() => setShowDropdown2(!showDropdown2)}
-                    className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
+                    className="flex items-center space-x-2 border border-blue-400 text-white hover:bg-blue-500 hover:text-white hover:border-blue-500 px-4 py-2 rounded-full font-semibold shadow-sm transition-colors duration-200 bg-transparent"
                   >
-                    <LogIn className="h-4 w-4" />
+                    <LogIn className="h-4 w-4 text-blue-400" />
                     <span>Login</span>
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown className="h-4 w-4 text-blue-400" />
                   </button>
 
                   {showDropdown2 && (
@@ -154,18 +154,18 @@ const Header = () => {
       </div>
 
       {/* Mobile Navigation */}
-      <div className="md:hidden border-t bg-gray-50 px-4 py-2">
+      <div className="md:hidden border-t bg-gray-800 px-4 py-2">
         <nav className="flex justify-center space-x-6">
           <button
             onClick={() => navigate('/')}
-            className="text-gray-700 hover:text-blue-600 transition-colors text-sm"
+            className="text-white hover:text-blue-400 transition-colors text-sm"
           >
             Home
           </button>
-          <button className="text-gray-700 hover:text-blue-600 transition-colors text-sm">
+          <button className="text-white hover:text-blue-400 transition-colors text-sm">
             About
           </button>
-          <button className="text-gray-700 hover:text-blue-600 transition-colors text-sm">
+          <button className="text-white hover:text-blue-400 transition-colors text-sm">
             Contact
           </button>
         </nav>
