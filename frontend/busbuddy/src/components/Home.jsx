@@ -1,11 +1,21 @@
+
 import React from 'react';
 import { Bus, Users, Shield, Clock } from 'lucide-react';
 import Layout from './layout/Layout';
+import busbuddyBg from '../assets/images/busbuddy.jpg';
 
 const Home = () => {
   return (
     <Layout>
-      <div className="bg-gradient-to-br from-blue-900 via-purple-900 to-green-900">
+      <div className="relative min-h-screen overflow-hidden">
+        {/* Blurred Background Image */}
+        <img
+          src={busbuddyBg}
+          alt="Home Background"
+          className="absolute inset-0 w-full h-full object-cover blur-[2px] scale-105 opacity-80 -z-10"
+        />
+        {/* Subtle overlay for readability */}
+        <div className="absolute inset-0 bg-black/50 -z-10" />
         {/* Hero Section */}
         <div className="container mx-auto px-4 py-16">
           <div className="text-center text-white mb-16">

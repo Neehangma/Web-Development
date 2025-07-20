@@ -1,11 +1,18 @@
 import React from 'react';
 import { Bus, Users, Shield, Clock } from 'lucide-react';
 import Layout from './layout/Layout';
+import dashboardBg from './assets/dashboard-bg.jpg';
 
 const Home = () => {
   return (
     <Layout>
-      <div className="bg-gradient-to-br from-blue-900 via-purple-900 to-green-900">
+      <div className="relative min-h-screen overflow-hidden">
+        {/* Blurred Background Image */}
+        <img
+          src={dashboardBg}
+          alt="Home Background"
+          className="absolute inset-0 w-full h-full object-cover blur-lg scale-105 opacity-60 -z-10"
+        />
         {/* Hero Section */}
         <div className="container mx-auto px-4 py-16">
           <div className="text-center text-white mb-16">
