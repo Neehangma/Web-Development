@@ -7,6 +7,7 @@ const Header = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showDropdown2, setShowDropdown2] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -17,6 +18,7 @@ const Header = () => {
   const handleNavigation = (path) => {
     navigate(path);
     setShowDropdown(false);
+    setShowDropdown2(false);
   };
 
   return (
@@ -89,49 +91,62 @@ const Header = () => {
                 )}
               </div>
             ) : (
-              <div className="relative">
-                <button
-                  onClick={() => setShowDropdown(!showDropdown)}
-                  className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
-                >
-                  <span>Login / Register</span>
-                  <ChevronDown className="h-4 w-4" />
-                </button>
+              <div className="flex items-center space-x-3">
+                {/* Register Button */}
+                <div className="relative">
+                  <button
+                    onClick={() => setShowDropdown(!showDropdown)}
+                    className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition-colors"
+                  >
+                    <UserPlus className="h-4 w-4" />
+                    <span>Register</span>
+                    <ChevronDown className="h-4 w-4" />
+                  </button>
 
-                {showDropdown && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg py-1 border">
-                    <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                      Passenger
+                  {showDropdown && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border">
+                      <button
+                        onClick={() => handleNavigation('/passenger/register')}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        <UserPlus className="h-4 w-4 inline mr-2" />
+                        Passenger Register
+                      </button>
                     </div>
-                    <button
-                      onClick={() => handleNavigation('/passenger/register')}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      <UserPlus className="h-4 w-4 inline mr-2" />
-                      Register
-                    </button>
-                    <button
-                      onClick={() => handleNavigation('/passenger/login')}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      <LogIn className="h-4 w-4 inline mr-2" />
-                      Login
-                    </button>
-                    
-                    <hr className="my-1" />
-                    
-                    <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                      Admin
+                  )}
+                </div>
+
+                {/* Login Button */}
+                <div className="relative">
+                  <button
+                    onClick={() => setShowDropdown2(!showDropdown2)}
+                    className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
+                  >
+                    <LogIn className="h-4 w-4" />
+                    <span>Login</span>
+                    <ChevronDown className="h-4 w-4" />
+                  </button>
+
+                  {showDropdown2 && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border">
+                      <button
+                        onClick={() => handleNavigation('/passenger/login')}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        <LogIn className="h-4 w-4 inline mr-2" />
+                        Passenger Login
+                      </button>
+                      <hr className="my-1" />
+                      <button
+                        onClick={() => handleNavigation('/admin/login')}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        <LogIn className="h-4 w-4 inline mr-2" />
+                        Admin Login
+                      </button>
                     </div>
-                    <button
-                      onClick={() => handleNavigation('/admin/login')}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      <LogIn className="h-4 w-4 inline mr-2" />
-                      Admin Login
-                    </button>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             )}
           </div>

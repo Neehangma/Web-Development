@@ -10,7 +10,7 @@ const Footer = () => {
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center mb-4">
               <Bus className="h-8 w-8 text-blue-400 mr-3" />
-              <h3 className="text-2xl font-bold">BusBook</h3>
+              <h3 className="text-2xl font-bold">BusBuddy</h3>
             </div>
             <p className="text-gray-300 mb-4 max-w-md">
               Your trusted partner for comfortable and reliable bus travel. We provide 
@@ -61,11 +61,11 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center">
                 <Phone className="h-5 w-5 text-blue-400 mr-3" />
-                <span className="text-gray-300">+91 98765 43210</span>
+                <span className="text-gray-300">+977 984 784 8941</span>
               </div>
               <div className="flex items-center">
                 <Mail className="h-5 w-5 text-blue-400 mr-3" />
-                <span className="text-gray-300">support@busbook.com</span>
+                <span className="text-gray-300">support@busbuddy.com</span>
               </div>
               <div className="flex items-start">
                 <MapPin className="h-5 w-5 text-blue-400 mr-3 mt-1" />
@@ -82,7 +82,7 @@ const Footer = () => {
 
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
-            © 2024 BusBook. All rights reserved.
+            © 2024 BusBuddy. All rights reserved.
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">

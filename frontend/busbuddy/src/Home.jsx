@@ -13,7 +13,7 @@ const Home = () => {
               <Bus className="h-20 w-20 text-white" />
             </div>
             <h1 className="text-5xl md:text-7xl font-bold mb-6">
-              Welcome to BusBook
+              Welcome to BusBuddy
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
               Your trusted partner for comfortable and reliable bus travel. Book tickets online with ease and travel with confidence.
@@ -56,9 +56,9 @@ const Home = () => {
             
             <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
               {[
-                { from: 'Mumbai', to: 'Pune', price: '₹450', duration: '3h 30m' },
-                { from: 'Delhi', to: 'Agra', price: '₹320', duration: '4h 15m' },
-                { from: 'Bangalore', to: 'Chennai', price: '₹680', duration: '6h 45m' }
+                { from: 'Kathmandu', to: 'Pokhara', price: 'Rs.1600', duration: '9h 30m' },
+                { from: 'Chitwan', to: 'Dharan', price: 'Rs.1300', duration: '4h 15m' },
+                { from: 'Biratnagar', to: 'Kathmandu', price: 'Rs.1800', duration: '12h 45m' }
               ].map((route, index) => (
                 <div key={index} className="bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow">
                   <div className="flex items-center justify-between mb-4">
@@ -80,7 +80,7 @@ const Home = () => {
         <div className="bg-gray-50 py-16">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Choose BusBook?</h2>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Choose BusBuddy?</h2>
               <p className="text-gray-600 text-lg">Experience the difference with our premium services</p>
             </div>
             

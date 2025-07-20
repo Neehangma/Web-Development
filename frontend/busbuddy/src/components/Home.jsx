@@ -54,25 +54,25 @@ const Home = () => {
               <p className="text-gray-600 text-lg">Discover our most traveled destinations</p>
             </div>
             
-            <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-              {[
-                { from: 'Mumbai', to: 'Pune', price: '₹450', duration: '3h 30m' },
-                { from: 'Delhi', to: 'Agra', price: '₹320', duration: '4h 15m' },
-                { from: 'Bangalore', to: 'Chennai', price: '₹680', duration: '6h 45m' }
-              ].map((route, index) => (
-                <div key={index} className="bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="font-semibold text-gray-900">{route.from}</span>
-                    <span className="text-gray-400">→</span>
-                    <span className="font-semibold text-gray-900">{route.to}</span>
+              <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                {[
+                  { from: 'Kathmandu', to: 'Pokhara', price: 'Rs.1600', duration: '9h 30m' },
+                  { from: 'Chitwan', to: 'Dharan', price: 'Rs.1300', duration: '4h 15m' },
+                  { from: 'Biratnagar', to: 'Kathmandu', price: 'Rs.1800', duration: '12h 45m' }
+                ].map((route, index) => (
+                  <div key={index} className="bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="font-semibold text-gray-900">{route.from}</span>
+                      <span className="text-gray-400">→</span>
+                      <span className="font-semibold text-gray-900">{route.to}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-blue-600 font-bold text-lg">{route.price}</span>
+                      <span className="text-gray-500 text-sm">{route.duration}</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-blue-600 font-bold text-lg">{route.price}</span>
-                    <span className="text-gray-500 text-sm">{route.duration}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
           </div>
         </div>
 
