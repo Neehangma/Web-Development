@@ -71,7 +71,7 @@ const Footer = () => {
                 <MapPin className="h-5 w-5 text-blue-400 mr-3 mt-1" />
                 <span className="text-gray-300">
                   123 Transport Hub,<br />
-                  City Center, State 12345
+                  City Center, Kathmandu 44600, Nepal
                 </span>
               </div>
             </div>

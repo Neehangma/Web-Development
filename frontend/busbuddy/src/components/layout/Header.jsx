@@ -96,20 +96,20 @@ const Header = () => {
                 <div className="relative">
                   <button
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className="flex items-center space-x-2 border border-blue-400 text-white hover:bg-blue-500 hover:text-white hover:border-blue-500 px-4 py-2 rounded-full font-semibold shadow-sm transition-colors duration-200 bg-transparent"
+                    className="flex items-center space-x-2 bg-blue-600/90 hover:bg-transparent hover:ring-2 hover:ring-blue-400 text-white px-4 py-2 rounded-md transition-all duration-200 shadow-md"
                   >
-                    <UserPlus className="h-4 w-4 text-blue-400" />
+                    <UserPlus className="h-4 w-4" />
                     <span>Register</span>
-                    <ChevronDown className="h-4 w-4 text-blue-400" />
+                    <ChevronDown className="h-4 w-4" />
                   </button>
 
                   {showDropdown && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border">
+                    <div className="absolute right-0 mt-2 w-48 bg-gray-900 text-white rounded-md shadow-lg py-1 border border-blue-700">
                       <button
                         onClick={() => handleNavigation('/passenger/register')}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300 transition-colors"
                       >
-                        <UserPlus className="h-4 w-4 inline mr-2" />
+                        <UserPlus className="h-4 w-4 inline mr-2 text-blue-400" />
                         Passenger Register
                       </button>
                     </div>
@@ -120,28 +120,28 @@ const Header = () => {
                 <div className="relative">
                   <button
                     onClick={() => setShowDropdown2(!showDropdown2)}
-                    className="flex items-center space-x-2 border border-blue-400 text-white hover:bg-blue-500 hover:text-white hover:border-blue-500 px-4 py-2 rounded-full font-semibold shadow-sm transition-colors duration-200 bg-transparent"
+                    className="flex items-center space-x-2 bg-blue-600/90 hover:bg-transparent hover:ring-2 hover:ring-blue-400 text-white px-4 py-2 rounded-md transition-all duration-200 shadow-md"
                   >
-                    <LogIn className="h-4 w-4 text-blue-400" />
+                    <LogIn className="h-4 w-4" />
                     <span>Login</span>
-                    <ChevronDown className="h-4 w-4 text-blue-400" />
+                    <ChevronDown className="h-4 w-4" />
                   </button>
 
                   {showDropdown2 && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border">
+                    <div className="absolute right-0 mt-2 w-48 bg-gray-900 text-white rounded-md shadow-lg py-1 border border-blue-700">
                       <button
                         onClick={() => handleNavigation('/passenger/login')}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300 transition-colors"
                       >
-                        <LogIn className="h-4 w-4 inline mr-2" />
+                        <LogIn className="h-4 w-4 inline mr-2 text-blue-400" />
                         Passenger Login
                       </button>
-                      <hr className="my-1" />
+                      <hr className="my-1 border-blue-700" />
                       <button
                         onClick={() => handleNavigation('/admin/login')}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300 transition-colors"
                       >
-                        <LogIn className="h-4 w-4 inline mr-2" />
+                        <LogIn className="h-4 w-4 inline mr-2 text-blue-400" />
                         Admin Login
                       </button>
                     </div>
