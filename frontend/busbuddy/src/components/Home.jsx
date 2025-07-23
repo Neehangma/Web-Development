@@ -7,14 +7,15 @@ import busbuddyBg from '../assets/images/busbuddy.jpg';
 const Home = () => {
   return (
     <Layout>
-      <div className="relative min-h-screen overflow-hidden">
-        {/* Blurred Background Image */}
+      {/* Decorative line between header and Welcome section */}
+      <div className="border-b-4 border-blue-700 shadow-[0_0_60px_0_rgba(59,130,246,0.15)]" />
+      <div className="relative min-h-screen overflow-hidden" id="home-section">
+        {/* Shared Blurred Background Image and Overlay for Welcome and Popular Routes */}
         <img
           src={busbuddyBg}
           alt="Home Background"
           className="absolute inset-0 w-full h-full object-cover blur-[2px] scale-105 opacity-80 -z-10"
         />
-        {/* Subtle overlay for readability */}
         <div className="absolute inset-0 bg-black/70 -z-10" />
         {/* Hero Section */}
         <div className="container mx-auto px-4 py-16">
@@ -57,8 +58,7 @@ const Home = () => {
         </div>
 
         {/* Popular Routes Section */}
-        <div className="bg-gray-900 py-20 relative overflow-hidden border-t-4 border-blue-700 shadow-[0_0_60px_0_rgba(59,130,246,0.15)]">
-          <div className="absolute inset-0 pointer-events-none opacity-20" style={{background: 'radial-gradient(circle at 70% 30%, #2563eb 0%, transparent 70%)'}} />
+        <div className="relative py-20 border-t-4 border-blue-700 shadow-[0_0_60px_0_rgba(59,130,246,0.15)]">
           <div className="container mx-auto px-4 relative z-10">
             <div className="text-center mb-12">
               <h2 className="text-4xl font-bold text-white mb-4 drop-shadow">Popular Routes</h2>
@@ -77,10 +77,10 @@ const Home = () => {
                     <span className="font-semibold text-white text-lg tracking-wide drop-shadow">{route.to}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="inline-block bg-blue-700/90 text-white font-semibold text-base px-4 py-1 rounded-full shadow-md border border-blue-400 hover:bg-blue-600 hover:scale-110 transition-all duration-200 cursor-pointer mr-2">
+                    <span className="inline-block bg-slate-700/90 text-white font-semibold text-base px-4 py-1 rounded-full shadow-md border border-slate-400 hover:bg-slate-600 hover:scale-110 hover:ring-2 hover:ring-slate-400 transition-all duration-200 cursor-pointer mr-2">
                       {route.price}
                     </span>
-                    <span className="inline-block bg-blue-800/90 text-white font-semibold text-base px-4 py-1 rounded-full shadow-md border border-blue-400 hover:bg-blue-700 hover:scale-110 transition-all duration-200 cursor-pointer">
+                    <span className="inline-block bg-slate-700/90 text-white font-semibold text-base px-4 py-1 rounded-full shadow-md border border-slate-400 hover:bg-slate-600 hover:scale-110 hover:ring-2 hover:ring-slate-400 transition-all duration-200 cursor-pointer">
                       {route.duration}
                     </span>
                   </div>
@@ -91,7 +91,7 @@ const Home = () => {
         </div>
 
         {/* Why Choose Us Section */}
-        <div className="bg-gradient-to-br from-blue-900 via-blue-950 to-gray-900 py-20">
+        <div className="bg-gradient-to-br from-blue-900 via-blue-950 to-gray-900 py-20" id="about-section">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
               <h2 className="text-4xl font-bold text-white mb-4 drop-shadow">Why Choose BusBuddy?</h2>
