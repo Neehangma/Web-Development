@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { LogIn, Bus } from 'lucide-react';
 import Layout from '../layout/Layout';
+import loginBg from '../../assets/images/login.jpg';
 
 const PassengerLogin = () => {
   const [email, setEmail] = useState('');
@@ -11,7 +12,6 @@ const PassengerLogin = () => {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -30,47 +30,67 @@ const PassengerLogin = () => {
 
   return (
     <Layout showFooter={false}>
-      <div className="min-h-screen bg-gradient-to-br from-green-900 to-blue-900 flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
+      <div className="relative min-h-screen flex items-center justify-center p-4 overflow-hidden">
+        {/* Background image with dark overlay */}
+        <img
+          src={loginBg}
+          alt="Login Background"
+          className="absolute inset-0 w-full h-full object-contain md:object-cover opacity-100 -z-20 transition-all duration-700"
+          draggable="false"
+        />
+        <div className="absolute inset-0 bg-black/60 -z-10" />
+        <div className="bg-white/20 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/30 p-8 w-full max-w-md relative z-10 ring-1 ring-white/40">
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
-              <Bus className="h-12 w-12 text-green-600" />
+              <Bus className="h-12 w-12 text-green-400 drop-shadow-lg" />
             </div>
-            <h2 className="text-3xl font-bold text-gray-900">Passenger Login</h2>
-            <p className="text-gray-600 mt-2">Access your booking dashboard</p>
+            <h2 className="text-3xl font-extrabold text-white drop-shadow-lg">Passenger Login</h2>
+            <p className="text-blue-100 mt-2 drop-shadow">Access your booking dashboard</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
-              </label>
+            {/* Email Field */}
+            <div className="relative mb-2">
               <input
                 type="email"
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="peer w-full px-4 py-3 border border-blue-200 bg-white/30 text-white placeholder-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all duration-200 shadow-sm backdrop-blur"
                 required
+                placeholder="Email Address"
+                autoComplete="off"
               />
+              <label htmlFor="email" className="absolute left-4 top-3 text-blue-100 text-sm pointer-events-none transition-all duration-200
+                peer-focus:-top-5 peer-focus:left-2 peer-focus:text-xs peer-focus:text-blue-200
+                peer-valid:-top-5 peer-valid:left-2 peer-valid:text-xs peer-valid:text-blue-200
+                bg-transparent px-1">
+                Email Address
+              </label>
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                Password
-              </label>
+            {/* Password Field */}
+            <div className="relative mb-2">
               <input
                 type="password"
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="peer w-full px-4 py-3 border border-blue-200 bg-white/30 text-white placeholder-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all duration-200 shadow-sm backdrop-blur"
                 required
+                placeholder="Password"
+                autoComplete="off"
               />
+              <label htmlFor="password" className="absolute left-4 top-3 text-blue-100 text-sm pointer-events-none transition-all duration-200
+                peer-focus:-top-5 peer-focus:left-2 peer-focus:text-xs peer-focus:text-blue-200
+                peer-valid:-top-5 peer-valid:left-2 peer-valid:text-xs peer-valid:text-blue-200
+                bg-transparent px-1">
+                Password
+              </label>
             </div>
 
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+              <div className="bg-red-600/90 border border-red-300 text-white px-4 py-3 rounded shadow">
                 {error}
               </div>
             )}
@@ -78,7 +98,7 @@ const PassengerLogin = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 flex items-center justify-center disabled:opacity-50"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg transition duration-200 flex items-center justify-center disabled:opacity-50 ring-2 ring-blue-300/40"
             >
               {loading ? (
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
@@ -89,12 +109,20 @@ const PassengerLogin = () => {
                 </>
               )}
             </button>
+            <div className="mt-2 text-right">
+              <Link
+                to="/passenger/forgot-password"
+                className="text-blue-200 hover:text-blue-400 text-sm underline"
+              >
+                Forgot Password ?
+              </Link>
+            </div>
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-blue-100">
               Don't have an account?{' '}
-              <Link to="/passenger/register" className="text-green-600 hover:text-green-700 font-medium">
+              <Link to="/passenger/register" className="text-green-300 hover:text-green-400 font-semibold underline">
                 Create one
               </Link>
             </p>
@@ -103,7 +131,7 @@ const PassengerLogin = () => {
           <div className="mt-4 text-center">
             <button
               onClick={() => navigate('/')}
-              className="text-blue-600 hover:text-blue-700 text-sm"
+              className="text-blue-200 hover:text-blue-400 text-sm underline"
             >
               Back to Home
             </button>

@@ -8,6 +8,7 @@ import PassengerRegister from './components/passenger/PassengerRegister';
 import PassengerLogin from './components/passenger/PassengerLogin';
 import PassengerDashboard from './components/passenger/PassengerDashboard';
 import PassengerProfile from './components/passenger/PassengerProfile';
+import ForgotPassword from './components/passenger/ForgotPassword';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, userType }) => {
@@ -82,6 +83,10 @@ function App() {
                   <PassengerLogin />
                 </AuthRoute>
               } 
+            />
+            <Route
+              path="/passenger/forgot-password"
+              element={<ForgotPassword />}
             />
             <Route 
               path="/passenger/dashboard" 

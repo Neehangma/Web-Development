@@ -3,7 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { UserPlus, Bus } from 'lucide-react';
 import Layout from '../layout/Layout';
-import registerBusBg from '../../assets/images/register.jpg';
+import registerBusBg from '../../assets/images/Register.jpg';
 
 const PassengerRegister = () => {
   const [formData, setFormData] = useState({
