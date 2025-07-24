@@ -2,7 +2,7 @@
 import React from 'react';
 import { Bus, Users, Shield, Clock } from 'lucide-react';
 import Layout from './layout/Layout';
-import busbuddyBg from '../assets/images/busbuddy.jpg';
+import homepageBg from '../assets/images/image.png';
 
 const Home = () => {
   return (
@@ -11,11 +11,11 @@ const Home = () => {
       <div className="border-b-4 border-blue-700 shadow-[0_0_60px_0_rgba(59,130,246,0.15)]" />
       <div className="relative min-h-screen overflow-hidden" id="home-section">
         {/* Shared Blurred Background Image and Overlay for Welcome and Popular Routes */}
-        <img
-          src={busbuddyBg}
-          alt="Home Background"
-          className="absolute inset-0 w-full h-full object-cover blur-[2px] scale-105 opacity-80 -z-10"
-        />
+          <img
+            src={homepageBg}
+            alt="Home Background"
+            className="absolute inset-0 w-full h-full object-cover object-[center_40%] opacity-80 -z-10"
+          />
         <div className="absolute inset-0 bg-black/70 -z-10" />
         {/* Hero Section */}
         <div className="container mx-auto px-4 py-16">
@@ -58,7 +58,7 @@ const Home = () => {
         </div>
 
         {/* Popular Routes Section */}
-        <div className="relative py-20 border-t-4 border-blue-700 shadow-[0_0_60px_0_rgba(59,130,246,0.15)]">
+        <div className="bg-gradient-to-br from-blue-900 via-blue-950 to-gray-900 py-20 border-t-4 border-blue-700 shadow-[0_0_60px_0_rgba(59,130,246,0.15)]">
           <div className="container mx-auto px-4 relative z-10">
             <div className="text-center mb-12">
               <h2 className="text-4xl font-bold text-white mb-4 drop-shadow">Popular Routes</h2>
@@ -70,7 +70,7 @@ const Home = () => {
                 { from: 'Chitwan', to: 'Dharan', price: 'Rs.1300', duration: '4h 15m' },
                 { from: 'Biratnagar', to: 'Kathmandu', price: 'Rs.1800', duration: '12h 45m' }
               ].map((route, index) => (
-                <div key={index} className="backdrop-blur-md bg-blue-900/40 border border-blue-700/60 rounded-2xl p-8 shadow-xl hover:scale-105 hover:shadow-blue-400/40 transition-all duration-200">
+                <div key={index} className="backdrop-blur-md bg-white/10 border border-blue-700/30 rounded-2xl p-8 shadow-lg hover:scale-105 hover:shadow-blue-400/30 transition-all duration-200">
                   <div className="flex items-center justify-between mb-6">
                     <span className="font-semibold text-white text-lg tracking-wide drop-shadow">{route.from}</span>
                     <span className="text-blue-300 text-3xl font-bold mx-2">→</span>

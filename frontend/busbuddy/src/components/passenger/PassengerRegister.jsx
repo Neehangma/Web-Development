@@ -47,7 +47,7 @@ const PassengerRegister = () => {
   };
 
   return (
-    <Layout showFooter={false}>
+    <Layout>
       <div className="relative min-h-screen flex items-center justify-center p-4 overflow-hidden">
         {/* Background image with dark overlays */}
         <img

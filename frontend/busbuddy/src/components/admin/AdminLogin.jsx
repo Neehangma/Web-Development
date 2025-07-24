@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { LogIn, Bus } from 'lucide-react';
+
+import adminBg from '../../assets/images/Admin.jpg';
 import Layout from '../layout/Layout';
 
 const AdminLogin = () => {
@@ -29,9 +31,16 @@ const AdminLogin = () => {
   };
 
   return (
-    <Layout showFooter={false}>
-      <div className="min-h-screen bg-gradient-to-br from-blue-900 to-indigo-900 flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
+    <Layout>
+      <div className="relative min-h-screen flex items-center justify-center p-4 overflow-hidden">
+        {/* Background Image */}
+        <img
+          src={adminBg}
+          alt="Admin Background"
+          className="absolute inset-0 w-full h-full object-cover object-[center_40%] opacity-80 -z-10"
+        />
+        <div className="absolute inset-0 bg-black/70 -z-10" />
+        <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md relative z-10">
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
               <Bus className="h-12 w-12 text-blue-600" />
