@@ -1,98 +1,119 @@
-import { DataTypes } from 'sequelize';
-import { sequelize } from '../config/database.js';
-import bcrypt from 'bcryptjs';
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
-const User = sequelize.define('user2', {
-  _id: {
-    type: DataTypes.UUID,
-    primaryKey: true,
-    defaultValue: DataTypes.UUIDV4, 
-  },
+const userSchema = new mongoose.Schema({
   firstName: {
-    type: DataTypes.STRING(50),
-    allowNull: false,
-    field: 'first_name',
-    validate: {
-      notEmpty: true,
-      len: [2, 50]
-    }
+    type: String,
+    required: [true, 'First name is required'],
+    trim: true,
+    maxLength: [50, 'First name cannot exceed 50 characters']
   },
   lastName: {
-    type: DataTypes.STRING(50),
-    allowNull: false,
-    field: 'last_name',
-    validate: {
-      notEmpty: true,
-      len: [2, 50]
-    }
+    type: String,
+    required: [true, 'Last name is required'],
+    trim: true,
+    maxLength: [50, 'Last name cannot exceed 50 characters']
   },
   email: {
-    type: DataTypes.STRING(255),
-    allowNull: false,
+    type: String,
+    required: [true, 'Email is required'],
     unique: true,
-    validate: {
-      isEmail: true,
-      notEmpty: true
-    }
+    lowercase: true,
+    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email']
   },
-  phoneNumber: {
-    type: DataTypes.STRING(20),
-    allowNull: false,
-    field: 'phone_number',
-    validate: {
-      notEmpty: true
-    }
-  },
-  country: {
-    type: DataTypes.STRING(100),
-    allowNull: false,
-    validate: {
-      notEmpty: true,
-      len: [2, 100]
-    }
-  },
-  dateOfBirth: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    field: 'date_of_birth',
+  phone: {
+    type: String,
+    required: [true, 'Phone number is required'],
+    unique: true,
+    match: [/^[\+]?[1-9][\d]{0,15}$/, 'Please enter a valid phone number']
   },
   password: {
-    type: DataTypes.STRING(255),
-    allowNull: false,
-    validate: {
-      notEmpty: true,
-      len: [8, 255]
+    type: String,
+    required: [true, 'Password is required'],
+    minLength: [6, 'Password must be at least 6 characters long'],
+    select: false
+  },
+  dateOfBirth: {
+    type: Date,
+    required: [true, 'Date of birth is required']
+  },
+  gender: {
+    type: String,
+    enum: ['Male', 'Female', 'Other'],
+    required: [true, 'Gender is required']
+  },
+  address: {
+    street: String,
+    city: String,
+    state: String,
+    zipCode: String,
+    country: { type: String, default: 'Nepal' }
+  },
+  userType: {
+    type: String,
+    enum: ['passenger', 'admin', 'operator'],
+    default: 'passenger'
+  },
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  },
+  profilePicture: {
+    type: String,
+    default: null
+  },
+  bookingHistory: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Booking'
+  }],
+  preferences: {
+    seatPreference: {
+      type: String,
+      enum: ['window', 'aisle', 'any'],
+      default: 'any'
+    },
+    notifications: {
+      email: { type: Boolean, default: true },
+      sms: { type: Boolean, default: true },
+      push: { type: Boolean, default: true }
     }
   }
 }, {
-  tableName: 'user2',
   timestamps: true,
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
-  hooks: {
-    beforeCreate: async (user) => {
-      if (user.password) {
-      
-        user.password = await bcrypt.hash(user.password, 12);
-      }
-    },
-    beforeUpdate: async (user) => {
-      if (user.changed('password')) {
-        const saltRounds = 12;
-        user.password = await bcrypt.hash(user.password, saltRounds);
-      }
-    }
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+});
+
+// Virtual for full name
+userSchema.virtual('fullName').get(function() {
+  return `${this.firstName} ${this.lastName}`;
+});
+
+// Hash password before saving
+userSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
+  
+  try {
+    const salt = await bcrypt.genSalt(12);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (error) {
+    next(error);
   }
 });
 
-// Method to verify password
-User.prototype.verifyPassword = async function(plainPassword) {
-  return await bcrypt.compare(plainPassword, this.password);
+// Compare password method
+userSchema.methods.comparePassword = async function(candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
 };
 
-// Method to find user by email
-User.findByEmail = async function(email) {
-  return await this.findOne({ where: { email } });
-};
+// Get user age
+userSchema.virtual('age').get(function() {
+  return Math.floor((Date.now() - this.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+});
 
-export default User;
+module.exports = mongoose.model('User', userSchema);

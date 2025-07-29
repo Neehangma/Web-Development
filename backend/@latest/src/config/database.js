@@ -1,28 +1,42 @@
-import { Sequelize } from 'sequelize';
-import dotenv from 'dotenv';
-import { db_host, db_name, db_password, db_user } from '../utils/constant.js';
+const mongoose = require('mongoose');
 
-dotenv.config();
-
-
-export const sequelize = new Sequelize(
-  db_name,
-  db_user,
-  db_password,
-  {
-    host: db_host,// use .env port if not default
-    dialect: db_user,       // you can change to 'mysql', etc.
-    logging: false,            // set true if you want to see SQL queries in console
-  }
-);
-
-export const db = async () => {
+const connectDB = async () => {
   try {
-    await sequelize.authenticate();  // checks DB connection
-    await sequelize.sync({ alter: true }); // updates tables if needed
-    console.log('✅ Database connected and synced successfully');
+    const conn = await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    console.log(`🗄️  MongoDB Connected: ${conn.connection.host}`);
+    
+    // Create indexes for better performance
+    await createIndexes();
+    
   } catch (error) {
-    console.error('❌ Failed to connect or sync database:', error);
-    process.exit(1); // stop server if DB fails
+    console.error('❌ Database connection error:', error.message);
+    process.exit(1);
   }
 };
+
+const createIndexes = async () => {
+  try {
+    // User model indexes
+    await mongoose.connection.collection('users').createIndex({ email: 1 }, { unique: true });
+    await mongoose.connection.collection('users').createIndex({ phone: 1 }, { unique: true });
+    
+    // Bus model indexes
+    await mongoose.connection.collection('buses').createIndex({ busNumber: 1 }, { unique: true });
+    await mongoose.connection.collection('buses').createIndex({ route: 1 });
+    
+    // Booking model indexes
+    await mongoose.connection.collection('bookings').createIndex({ user: 1 });
+    await mongoose.connection.collection('bookings').createIndex({ bus: 1 });
+    await mongoose.connection.collection('bookings').createIndex({ bookingDate: 1 });
+    
+    console.log('📊 Database indexes created successfully');
+  } catch (error) {
+    console.log('⚠️  Index creation warning:', error.message);
+  }
+};
+
+module.exports = connectDB;
