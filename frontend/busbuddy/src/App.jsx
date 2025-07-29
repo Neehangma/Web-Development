@@ -18,7 +18,7 @@ const ProtectedRoute = ({ children, userType }) => {
     return <Navigate to="/" replace />;
   }
   
-  if (user.type !== userType) {
+  if (userType && user.type !== userType) {
     return <Navigate to="/" replace />;
   }
   
@@ -27,12 +27,20 @@ const ProtectedRoute = ({ children, userType }) => {
 
 // Redirect if already authenticated
 const AuthRoute = ({ children }) => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
   
   if (user) {
     if (user.type === 'admin') {
       return <Navigate to="/admin/dashboard" replace />;
-    } else {
+    } else if (user.type === 'passenger') {
       return <Navigate to="/passenger/dashboard" replace />;
     }
   }

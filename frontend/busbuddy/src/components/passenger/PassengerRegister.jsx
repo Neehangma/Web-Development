@@ -28,12 +28,16 @@ const PassengerRegister = () => {
       return;
     }
 
-    const success = await register(formData.name, formData.email, formData.password);
+    try {
+      const success = await register(formData.name, formData.email, formData.password);
     
-    if (success) {
-      navigate('/passenger/login');
-    } else {
-      setError('Email already exists');
+      if (success) {
+        navigate('/passenger/login');
+      } else {
+        setError('Email already exists. Please use a different email address.');
+      }
+    } catch (error) {
+      setError('Registration failed. Please try again.');
     }
     
     setLoading(false);

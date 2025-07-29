@@ -17,12 +17,16 @@ const PassengerLogin = () => {
     setLoading(true);
     setError('');
 
-    const success = await login(email, password, 'passenger');
+    try {
+      const success = await login(email, password, 'passenger');
     
-    if (success) {
-      navigate('/passenger/dashboard');
-    } else {
-      setError('Invalid email or password');
+      if (success) {
+        navigate('/passenger/dashboard');
+      } else {
+        setError('Invalid email or password. Please check your credentials.');
+      }
+    } catch (error) {
+      setError('Login failed. Please try again.');
     }
     
     setLoading(false);

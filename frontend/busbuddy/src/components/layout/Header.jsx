@@ -38,7 +38,6 @@ const Header = () => {
   const handleLogout = () => {
     logout();
     navigate('/');
-    setShowDropdown(false);
   };
 
   // Scroll to section if on homepage, else navigate to home and scroll after navigation

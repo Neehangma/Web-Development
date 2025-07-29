@@ -19,12 +19,16 @@ const AdminLogin = () => {
     setLoading(true);
     setError('');
 
-    const success = await login(email, password, 'admin');
+    try {
+      const success = await login(email, password, 'admin');
     
-    if (success) {
-      navigate('/admin/dashboard');
-    } else {
-      setError('Invalid admin credentials');
+      if (success) {
+        navigate('/admin/dashboard');
+      } else {
+        setError('Invalid admin credentials. Please check your email and password.');
+      }
+    } catch (error) {
+      setError('Login failed. Please try again.');
     }
     
     setLoading(false);
