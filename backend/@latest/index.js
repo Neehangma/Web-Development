@@ -6,7 +6,7 @@ const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 require('dotenv').config();
 
-const connectDB = require('./src/config/database');
+const { connectDB } = require('./src/config/database');
 
 // Import routes
 const authRoutes = require('./src/routes/authRoute');
@@ -19,7 +19,7 @@ const bookingRoutes = require('./src/routes/bookingRoute');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Connect to MongoDB
+// Connect to PostgreSQL
 connectDB();
 
 // Security middleware
@@ -60,9 +60,10 @@ if (process.env.NODE_ENV === 'development') {
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'OK',
-    message: 'BusBuddy Backend is running',
+    message: 'BusBuddy Backend is running with PostgreSQL',
     timestamp: new Date().toISOString(),
-    version: '1.0.0'
+    version: '1.0.0',
+    database: 'PostgreSQL with Sequelize'
   });
 });
 
@@ -78,7 +79,8 @@ app.use('/api/bookings', bookingRoutes);
 app.get('/api', (req, res) => {
   res.status(200).json({
     success: true,
-    message: 'BusBuddy API v1.0.0',
+    message: 'BusBuddy API v1.0.0 with PostgreSQL',
+    database: 'PostgreSQL with Sequelize ORM',
     endpoints: {
       auth: '/api/auth',
       login: '/api/login',
@@ -105,9 +107,9 @@ app.use('*', (req, res) => {
 app.use((err, req, res, next) => {
   console.error('Error:', err.stack);
   
-  // Mongoose validation error
-  if (err.name === 'ValidationError') {
-    const errors = Object.values(err.errors).map(e => ({
+  // Sequelize validation error
+  if (err.name === 'SequelizeValidationError') {
+    const errors = err.errors.map(e => ({
       field: e.path,
       message: e.message
     }));
@@ -119,11 +121,20 @@ app.use((err, req, res, next) => {
     });
   }
   
-  // Mongoose cast error
-  if (err.name === 'CastError') {
+  // Sequelize unique constraint error
+  if (err.name === 'SequelizeUniqueConstraintError') {
+    return res.status(409).json({
+      success: false,
+      message: 'Duplicate entry found',
+      field: err.errors[0]?.path
+    });
+  }
+  
+  // Sequelize foreign key constraint error
+  if (err.name === 'SequelizeForeignKeyConstraintError') {
     return res.status(400).json({
       success: false,
-      message: 'Invalid ID format'
+      message: 'Invalid reference to related data'
     });
   }
   
@@ -169,6 +180,7 @@ app.listen(PORT, () => {
   console.log(`🌐 Health check: http://localhost:${PORT}/health`);
   console.log(`📚 API docs: http://localhost:${PORT}/api`);
   console.log(`🔧 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🗄️  Database: PostgreSQL with Sequelize ORM`);
 });
 
 module.exports = app;

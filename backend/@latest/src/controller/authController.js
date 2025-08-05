@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const { User } = require('../models');
 const { validationResult } = require('express-validator');
 
 // Generate JWT Token
@@ -35,7 +35,12 @@ const register = async (req, res) => {
 
     // Check if user already exists
     const existingUser = await User.findOne({
-      $or: [{ email }, { phone }]
+      where: {
+        [require('sequelize').Op.or]: [
+          { email },
+          { phone }
+        ]
+      }
     });
 
     if (existingUser) {
@@ -48,7 +53,7 @@ const register = async (req, res) => {
     }
 
     // Create new user
-    const user = new User({
+    const user = await User.create({
       firstName,
       lastName,
       email,
@@ -56,16 +61,14 @@ const register = async (req, res) => {
       password,
       dateOfBirth: new Date(dateOfBirth),
       gender,
-      address
+      address: address || {}
     });
 
-    await user.save();
-
     // Generate token
-    const token = generateToken(user._id);
+    const token = generateToken(user.id);
 
     // Remove password from response
-    const userResponse = user.toObject();
+    const userResponse = user.toJSON();
     delete userResponse.password;
 
     res.status(201).json({
@@ -101,8 +104,8 @@ const login = async (req, res) => {
 
     const { email, password } = req.body;
 
-    // Find user and include password field
-    const user = await User.findOne({ email }).select('+password');
+    // Find user
+    const user = await User.findOne({ where: { email } });
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -127,11 +130,14 @@ const login = async (req, res) => {
       });
     }
 
+    // Update last login
+    await user.update({ lastLoginAt: new Date() });
+
     // Generate token
-    const token = generateToken(user._id);
+    const token = generateToken(user.id);
 
     // Remove password from response
-    const userResponse = user.toObject();
+    const userResponse = user.toJSON();
     delete userResponse.password;
 
     res.status(200).json({
@@ -156,9 +162,17 @@ const login = async (req, res) => {
 // Get Current User Profile
 const getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId)
-      .populate('bookingHistory')
-      .select('-password');
+    const user = await User.findByPk(req.user.userId, {
+      include: [
+        {
+          model: require('../models').Booking,
+          as: 'bookings',
+          limit: 10,
+          order: [['createdAt', 'DESC']]
+        }
+      ],
+      attributes: { exclude: ['password'] }
+    });
 
     if (!user) {
       return res.status(404).json({
@@ -206,12 +220,7 @@ const updateProfile = async (req, res) => {
       });
     }
 
-    const user = await User.findByIdAndUpdate(
-      req.user.userId,
-      req.body,
-      { new: true, runValidators: true }
-    ).select('-password');
-
+    const user = await User.findByPk(req.user.userId);
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -219,10 +228,16 @@ const updateProfile = async (req, res) => {
       });
     }
 
+    await user.update(req.body);
+
+    // Remove password from response
+    const userResponse = user.toJSON();
+    delete userResponse.password;
+
     res.status(200).json({
       success: true,
       message: 'Profile updated successfully',
-      data: { user }
+      data: { user: userResponse }
     });
 
   } catch (error) {
