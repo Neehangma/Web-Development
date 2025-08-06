@@ -3,11 +3,17 @@ import PropTypes from 'prop-types';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Bus, Calendar, Clock, MapPin, LogOut, Plus, Trash2, User, CreditCard } from 'lucide-react';
+<<<<<<< HEAD
 
 import Layout from '../layout/Layout';
 import PaymentModal from './PaymentModal';
 // If you extract BookingFormModal, import it here:
 // import BookingFormModal from './BookingFormModal';
+=======
+import Layout from '../layout/Layout';
+import PaymentModal from './PaymentModal';
+
+>>>>>>> 7818c94 (Continuing development from another PC)
 
 const PassengerDashboard = () => {
   const { user, logout } = useAuth();
@@ -15,12 +21,19 @@ const PassengerDashboard = () => {
   const [activeTab, setActiveTab] = useState('book');
   const [routes, setRoutes] = useState([]);
   const [bookings, setBookings] = useState([]);
+<<<<<<< HEAD
+=======
+  const [refunds, setRefunds] = useState([]);
+>>>>>>> 7818c94 (Continuing development from another PC)
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [selectedRoute, setSelectedRoute] = useState(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [pendingBooking, setPendingBooking] = useState(null);
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7818c94 (Continuing development from another PC)
   useEffect(() => {
     if (!user) {
       navigate('/passenger/login');
@@ -46,6 +59,17 @@ const PassengerDashboard = () => {
       );
       setBookings(userBookings);
     }
+<<<<<<< HEAD
+=======
+
+    // Load refunds for current user
+    const savedRefunds = localStorage.getItem('refunds');
+    if (savedRefunds) {
+      const allRefunds = JSON.parse(savedRefunds);
+      const userRefunds = allRefunds.filter((refund) => refund.passengerId === user?.id);
+      setRefunds(userRefunds);
+    }
+>>>>>>> 7818c94 (Continuing development from another PC)
   };
 
   const handleLogout = () => {
@@ -86,6 +110,37 @@ const PassengerDashboard = () => {
     setActiveTab('bookings');
   };
 
+<<<<<<< HEAD
+=======
+  // Request refund handler
+  const handleRequestRefund = (booking) => {
+    // Mark booking as cancelled
+    handleCancelBooking(booking.id);
+
+    // Create refund request
+    const newRefund = {
+      id: `refund-${Date.now()}`,
+      bookingId: booking.id,
+      passengerId: booking.passengerId,
+      passengerName: booking.passengerName,
+      route: booking.route,
+      amount: booking.route.price,
+      status: 'pending',
+      requestedAt: new Date().toISOString()
+    };
+
+    // Save to localStorage
+    const savedRefunds = localStorage.getItem('refunds');
+    const allRefunds = savedRefunds ? JSON.parse(savedRefunds) : [];
+    const updatedRefunds = [...allRefunds, newRefund];
+    localStorage.setItem('refunds', JSON.stringify(updatedRefunds));
+
+    // Update local state
+    setRefunds(prev => [...prev, newRefund]);
+    setActiveTab('refunds');
+  };
+
+>>>>>>> 7818c94 (Continuing development from another PC)
   const handleCancelBooking = (bookingId) => {
     // Update booking status
     const savedBookings = localStorage.getItem('bookings');
@@ -140,7 +195,12 @@ const PassengerDashboard = () => {
             <nav className="flex space-x-8">
               {[
                 { id: 'book', label: 'Book Ticket', icon: Plus },
+<<<<<<< HEAD
                 { id: 'bookings', label: 'My Bookings', icon: Calendar }
+=======
+                { id: 'bookings', label: 'My Bookings', icon: Calendar },
+                { id: 'refunds', label: 'Refunds', icon: CreditCard }
+>>>>>>> 7818c94 (Continuing development from another PC)
               ].map((tab) => {
                 const Icon = tab.icon;
                 return (
@@ -278,11 +338,20 @@ const PassengerDashboard = () => {
                         </div>
                         {booking.status === 'confirmed' && (
                           <button
+<<<<<<< HEAD
                             onClick={() => handleCancelBooking(booking.id)}
                             className="ml-4 text-red-600 hover:text-red-800 p-2 rounded-md hover:bg-red-50 transition-colors"
                             title="Cancel Booking"
                           >
                             <Trash2 className="h-5 w-5" />
+=======
+                            onClick={() => handleRequestRefund(booking)}
+                            className="ml-4 text-red-600 hover:text-red-800 p-2 rounded-md hover:bg-red-50 transition-colors"
+                            title="Request Refund"
+                          >
+                            <Trash2 className="h-5 w-5" />
+                            <span className="ml-2 text-xs">Request Refund</span>
+>>>>>>> 7818c94 (Continuing development from another PC)
                           </button>
                         )}
                       </div>
@@ -292,6 +361,52 @@ const PassengerDashboard = () => {
               )}
             </div>
           )}
+<<<<<<< HEAD
+=======
+
+          {/* Refunds Tab */}
+          {activeTab === 'refunds' && (
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">My Refund Requests</h2>
+              {refunds.length === 0 ? (
+                <div className="bg-white rounded-lg shadow p-8 text-center">
+                  <CreditCard className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-500 text-lg">No refund requests found</p>
+                  <p className="text-gray-400 text-sm mt-2">Request a refund from your bookings</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {refunds.map((refund) => (
+                    <div key={refund.id} className="bg-white rounded-lg shadow p-6">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <div className="font-medium text-lg">
+                            {refund.route.from} → {refund.route.to}
+                          </div>
+                          <div className="text-sm text-gray-600">
+                            Amount: <span className="font-bold text-green-600">₹{refund.amount}</span>
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            Requested on: {new Date(refund.requestedAt).toLocaleDateString()}
+                          </div>
+                        </div>
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                          refund.status === 'pending'
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : refund.status === 'approved'
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-red-100 text-red-800'
+                        }`}>
+                          {refund.status.toUpperCase()}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+>>>>>>> 7818c94 (Continuing development from another PC)
         </div>
 
         {/* Booking Form Modal */}

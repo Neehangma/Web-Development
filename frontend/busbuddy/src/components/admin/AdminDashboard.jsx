@@ -525,7 +525,11 @@ const RefundManagement = () => {
                 <div className="bg-green-50 rounded-lg p-4 mb-4">
                   <div className="flex justify-between items-center">
                     <span className="text-green-700 font-medium">Refund Amount:</span>
+<<<<<<< HEAD
                     <span className="text-2xl font-bold text-green-600">₹{refund.amount}</span>
+=======
+                    <span className="text-2xl font-bold text-green-600">Rs.{refund.amount}</span>
+>>>>>>> 7818c94 (Continuing development from another PC)
                   </div>
                 </div>
 
@@ -697,6 +701,12 @@ const BusFormModal = ({ bus, onSubmit, onClose }) => {
               <option value="Non-AC">Non-AC</option>
               <option value="Sleeper">Sleeper</option>
               <option value="Semi-Sleeper">Semi-Sleeper</option>
+<<<<<<< HEAD
+=======
+              <option value="Wi-fi">Semi-Sleeper</option>
+              <option value="Special-need">Semi-Sleeper</option>
+
+>>>>>>> 7818c94 (Continuing development from another PC)
             </select>
           </div>
           <div>
@@ -806,7 +816,11 @@ const RouteFormModal = ({ route, onSubmit, onClose }) => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
+<<<<<<< HEAD
               Price (₹)
+=======
+              Price (Rs.)
+>>>>>>> 7818c94 (Continuing development from another PC)
             </label>
             <input
               type="number"

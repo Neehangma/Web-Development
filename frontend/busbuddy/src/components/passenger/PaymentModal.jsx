@@ -15,7 +15,12 @@ const PaymentModal = ({
     cvv: '',
     cardholderName: ''
   });
+<<<<<<< HEAD
   const [upiId, setUpiId] = useState('');
+=======
+  const [esewaId, setEsewaId] = useState('');
+  const [khaltiId, setKhaltiId] = useState('');
+>>>>>>> 7818c94 (Continuing development from another PC)
   const [processing, setProcessing] = useState(false);
 
   if (!isOpen) return null;
@@ -36,6 +41,7 @@ const PaymentModal = ({
     let formattedValue = value;
 
     if (name === 'cardNumber') {
+<<<<<<< HEAD
       // Format card number with spaces
       formattedValue = value.replace(/\s/g, '').replace(/(.{4})/g, '$1 ').trim();
       if (formattedValue.length > 19) formattedValue = formattedValue.slice(0, 19);
@@ -45,6 +51,14 @@ const PaymentModal = ({
       if (formattedValue.length > 5) formattedValue = formattedValue.slice(0, 5);
     } else if (name === 'cvv') {
       // Limit CVV to 3 digits
+=======
+      formattedValue = value.replace(/\s/g, '').replace(/(.{4})/g, '$1 ').trim();
+      if (formattedValue.length > 19) formattedValue = formattedValue.slice(0, 19);
+    } else if (name === 'expiryDate') {
+      formattedValue = value.replace(/\D/g, '').replace(/(\d{2})(\d)/, '$1/$2');
+      if (formattedValue.length > 5) formattedValue = formattedValue.slice(0, 5);
+    } else if (name === 'cvv') {
+>>>>>>> 7818c94 (Continuing development from another PC)
       formattedValue = value.replace(/\D/g, '').slice(0, 3);
     }
 
@@ -90,7 +104,11 @@ const PaymentModal = ({
               <hr className="my-2" />
               <div className="flex justify-between text-lg font-bold">
                 <span>Total Amount:</span>
+<<<<<<< HEAD
                 <span className="text-green-600">₹{amount}</span>
+=======
+                <span className="text-green-600">Rs.{amount}</span>
+>>>>>>> 7818c94 (Continuing development from another PC)
               </div>
             </div>
           </div>
@@ -115,6 +133,7 @@ const PaymentModal = ({
                 <input
                   type="radio"
                   name="paymentMethod"
+<<<<<<< HEAD
                   value="upi"
                   checked={paymentMethod === 'upi'}
                   onChange={(e) => setPaymentMethod(e.target.value)}
@@ -122,6 +141,27 @@ const PaymentModal = ({
                 />
                 <span className="mr-2">💳</span>
                 <span>UPI Payment</span>
+=======
+                  value="esewa"
+                  checked={paymentMethod === 'esewa'}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  className="mr-3"
+                />
+                {/* <img src={EsewaLogo} alt="eSewa" className="h-5 w-5 mr-2" /> */}
+                <span>eSewa</span>
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="khalti"
+                  checked={paymentMethod === 'khalti'}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  className="mr-3"
+                />
+                {/* <img src={KhaltiLogo} alt="Khalti" className="h-5 w-5 mr-2" /> */}
+                <span>Khalti</span>
+>>>>>>> 7818c94 (Continuing development from another PC)
               </label>
             </div>
           </div>
@@ -203,6 +243,7 @@ const PaymentModal = ({
               </div>
             )}
 
+<<<<<<< HEAD
             {paymentMethod === 'upi' && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -216,6 +257,43 @@ const PaymentModal = ({
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
+=======
+            {paymentMethod === 'esewa' && (
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    eSewa ID / Mobile Number
+                  </label>
+                  <input
+                    type="text"
+                    name="esewaId"
+                    value={esewaId}
+                    onChange={(e) => setEsewaId(e.target.value)}
+                    placeholder="eSewa ID or Mobile Number"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    required
+                  />
+                </div>
+              </div>
+            )}
+
+            {paymentMethod === 'khalti' && (
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Khalti ID / Mobile Number
+                  </label>
+                  <input
+                    type="text"
+                    name="khaltiId"
+                    value={khaltiId}
+                    onChange={(e) => setKhaltiId(e.target.value)}
+                    placeholder="Khalti ID or Mobile Number"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    required
+                  />
+                </div>
+>>>>>>> 7818c94 (Continuing development from another PC)
               </div>
             )}
 
