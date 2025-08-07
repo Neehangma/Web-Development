@@ -84,7 +84,7 @@ const BookingForm = ({ isOpen, route, onSubmit, onClose }) => {
         <div className="text-sm text-green-800 space-y-1">
           <p><strong>Route:</strong> {route.from} to {route.to}</p>
           <p><strong>Duration:</strong> {route.duration}</p>
-          <p><strong>Price:</strong> ₹{route.price}</p>
+          <p><strong>Price:</strong> Rs.{route.price}</p>
         </div>
       </div>
 

@@ -96,7 +96,7 @@ const PaymentModal = ({
               <hr className="my-2" />
               <div className="flex justify-between text-lg font-bold">
                 <span>Total Amount:</span>
-                <span className="text-green-600">₹{amount}</span>
+                <span className="text-green-600">Rs.{amount}</span>
                 <span className="text-green-600">Rs.{amount}</span>
               </div>
             </div>
@@ -331,7 +331,7 @@ const PaymentModal = ({
                     Processing...
                   </>
                 ) : (
-                  `Pay ₹${amount}`
+                  `Pay Rs.${amount}`
                 )}
               </button>
             </div>

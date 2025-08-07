@@ -280,7 +280,7 @@ const AdminDashboard = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{route.to}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{route.distance} km</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{route.duration}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹{route.price}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Rs.{route.price}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <button
                             onClick={() => { setEditingRoute(route); setShowRouteForm(true); }}
@@ -465,7 +465,7 @@ const RefundManagement = () => {
                   {/* Amount */}
                   <div className="bg-green-50 rounded-lg p-4 mb-4 flex justify-between items-center">
                     <span className="text-green-700 font-medium">Refund Amount:</span>
-                    <span className="text-2xl font-bold text-green-600">₹{refund.amount}</span>
+                    <span className="text-2xl font-bold text-green-600">Rs.{refund.amount}</span>
                   </div>
                   {/* Actions */}
                   <div className="flex justify-end space-x-3">
@@ -525,7 +525,7 @@ const RefundManagement = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {get(route, 'from', '--')} → {get(route, 'to', '--')}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">₹{refund.amount}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">Rs.{refund.amount}</td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                           refund.status === 'approved'

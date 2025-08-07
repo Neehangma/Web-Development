@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { LogIn, Bus } from 'lucide-react';
 import Layout from '../layout/Layout';
 import loginBg from '../../assets/images/login.jpg';
@@ -12,14 +12,29 @@ const PassengerLogin = () => {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // State for success message after password reset
+  const [successMessage, setSuccessMessage] = useState('');
+
+  useEffect(() => {
+    // Check if redirected from forgot password successfully
+    if (location.state?.passwordResetSuccess) {
+      setSuccessMessage('Password changed successfully! Please log in.');
+      // Clear the state so message doesn't appear after refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccessMessage('');
 
     try {
       const success = await login(email, password, 'passenger');
-    
+
       if (success) {
         navigate('/passenger/dashboard');
       } else {
@@ -28,7 +43,7 @@ const PassengerLogin = () => {
     } catch (error) {
       setError('Login failed. Please try again.');
     }
-    
+
     setLoading(false);
   };
 
@@ -52,6 +67,13 @@ const PassengerLogin = () => {
             <p className="text-blue-100 mt-2 drop-shadow">Access your booking dashboard</p>
           </div>
 
+          {/* Success message after password reset */}
+          {successMessage && (
+            <div className="bg-green-600/90 border border-green-300 text-white px-4 py-3 rounded shadow mb-4 text-center">
+              {successMessage}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Field */}
             <div className="relative mb-2">
@@ -65,10 +87,13 @@ const PassengerLogin = () => {
                 placeholder="Email Address"
                 autoComplete="off"
               />
-              <label htmlFor="email" className="absolute left-4 top-3 text-blue-100 text-sm pointer-events-none transition-all duration-200
-                peer-focus:-top-5 peer-focus:left-2 peer-focus:text-xs peer-focus:text-blue-200
-                peer-valid:-top-5 peer-valid:left-2 peer-valid:text-xs peer-valid:text-blue-200
-                bg-transparent px-1">
+              <label
+                htmlFor="email"
+                className="absolute left-4 top-3 text-blue-100 text-sm pointer-events-none transition-all duration-200
+                  peer-focus:-top-5 peer-focus:left-2 peer-focus:text-xs peer-focus:text-blue-200
+                  peer-valid:-top-5 peer-valid:left-2 peer-valid:text-xs peer-valid:text-blue-200
+                  bg-transparent px-1"
+              >
                 Email Address
               </label>
             </div>
@@ -85,10 +110,13 @@ const PassengerLogin = () => {
                 placeholder="Password"
                 autoComplete="off"
               />
-              <label htmlFor="password" className="absolute left-4 top-3 text-blue-100 text-sm pointer-events-none transition-all duration-200
-                peer-focus:-top-5 peer-focus:left-2 peer-focus:text-xs peer-focus:text-blue-200
-                peer-valid:-top-5 peer-valid:left-2 peer-valid:text-xs peer-valid:text-blue-200
-                bg-transparent px-1">
+              <label
+                htmlFor="password"
+                className="absolute left-4 top-3 text-blue-100 text-sm pointer-events-none transition-all duration-200
+                  peer-focus:-top-5 peer-focus:left-2 peer-focus:text-xs peer-focus:text-blue-200
+                  peer-valid:-top-5 peer-valid:left-2 peer-valid:text-xs peer-valid:text-blue-200
+                  bg-transparent px-1"
+              >
                 Password
               </label>
             </div>
@@ -126,7 +154,10 @@ const PassengerLogin = () => {
           <div className="mt-6 text-center">
             <p className="text-sm text-blue-100">
               Don't have an account?{' '}
-              <Link to="/passenger/register" className="text-green-300 hover:text-green-400 font-semibold underline">
+              <Link
+                to="/passenger/register"
+                className="text-green-300 hover:text-green-400 font-semibold underline"
+              >
                 Create one
               </Link>
             </p>

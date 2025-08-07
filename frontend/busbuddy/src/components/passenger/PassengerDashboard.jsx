@@ -233,7 +233,7 @@ const PassengerDashboard = () => {
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="text-2xl font-bold text-green-600">
-                          ₹{route.price}
+                          Rs.{route.price}
                         </div>
                         <button
                           onClick={() => {
@@ -356,7 +356,7 @@ const PassengerDashboard = () => {
                             {refund.route.from} → {refund.route.to}
                           </div>
                           <div className="text-sm text-gray-600">
-                            Amount: <span className="font-bold text-green-600">₹{refund.amount}</span>
+                            Amount: <span className="font-bold text-green-600">Rs.{refund.amount}</span>
                           </div>
                           <div className="text-sm text-gray-500">
                             Requested on: {new Date(refund.requestedAt).toLocaleDateString()}
@@ -454,7 +454,7 @@ const BookingFormModal = ({ route, onSubmit, onClose }) => {
           <div className="text-sm text-green-800">
             <p><strong>Route:</strong> {route.from} to {route.to}</p>
             <p><strong>Duration:</strong> {route.duration}</p>
-            <p><strong>Price:</strong> ₹{route.price}</p>
+            <p><strong>Price:</strong> Rs.{route.price}</p>
           </div>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
