@@ -3,17 +3,8 @@ import PropTypes from 'prop-types';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Bus, Calendar, Clock, MapPin, LogOut, Plus, Trash2, User, CreditCard } from 'lucide-react';
-<<<<<<< HEAD
-
 import Layout from '../layout/Layout';
 import PaymentModal from './PaymentModal';
-// If you extract BookingFormModal, import it here:
-// import BookingFormModal from './BookingFormModal';
-=======
-import Layout from '../layout/Layout';
-import PaymentModal from './PaymentModal';
-
->>>>>>> 7818c94 (Continuing development from another PC)
 
 const PassengerDashboard = () => {
   const { user, logout } = useAuth();
@@ -21,19 +12,12 @@ const PassengerDashboard = () => {
   const [activeTab, setActiveTab] = useState('book');
   const [routes, setRoutes] = useState([]);
   const [bookings, setBookings] = useState([]);
-<<<<<<< HEAD
-=======
   const [refunds, setRefunds] = useState([]);
->>>>>>> 7818c94 (Continuing development from another PC)
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [selectedRoute, setSelectedRoute] = useState(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [pendingBooking, setPendingBooking] = useState(null);
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 7818c94 (Continuing development from another PC)
   useEffect(() => {
     if (!user) {
       navigate('/passenger/login');
@@ -54,22 +38,21 @@ const PassengerDashboard = () => {
     const savedBookings = localStorage.getItem('bookings');
     if (savedBookings) {
       const allBookings = JSON.parse(savedBookings);
-      const userBookings = allBookings.filter((booking) => 
+      const userBookings = allBookings.filter((booking) =>
         booking.passengerId === user?.id
       );
       setBookings(userBookings);
     }
-<<<<<<< HEAD
-=======
 
     // Load refunds for current user
     const savedRefunds = localStorage.getItem('refunds');
     if (savedRefunds) {
       const allRefunds = JSON.parse(savedRefunds);
-      const userRefunds = allRefunds.filter((refund) => refund.passengerId === user?.id);
+      const userRefunds = allRefunds.filter((refund) =>
+        refund.passengerId === user?.id
+      );
       setRefunds(userRefunds);
     }
->>>>>>> 7818c94 (Continuing development from another PC)
   };
 
   const handleLogout = () => {
@@ -93,7 +76,7 @@ const PassengerDashboard = () => {
       routeId: selectedRoute.id,
       bookingDate: new Date().toISOString(),
       status: 'confirmed',
-      route: selectedRoute
+      route: selectedRoute,
     };
 
     // Save to localStorage
@@ -103,16 +86,34 @@ const PassengerDashboard = () => {
     localStorage.setItem('bookings', JSON.stringify(updatedBookings));
 
     // Update local state
-    setBookings(prev => [...prev, newBooking]);
+    setBookings((prev) => [...prev, newBooking]);
     setShowPaymentModal(false);
     setSelectedRoute(null);
     setPendingBooking(null);
     setActiveTab('bookings');
   };
 
-<<<<<<< HEAD
-=======
-  // Request refund handler
+  // Cancel booking without refund (optional, use only if you want a "Cancel" button as well)
+  const handleCancelBooking = (bookingId) => {
+    // Update booking status
+    const savedBookings = localStorage.getItem('bookings');
+    if (savedBookings) {
+      const allBookings = JSON.parse(savedBookings);
+      const updatedBookings = allBookings.map((booking) =>
+        booking.id === bookingId ? { ...booking, status: 'cancelled' } : booking
+      );
+      localStorage.setItem('bookings', JSON.stringify(updatedBookings));
+
+      // Update local state
+      setBookings((prev) =>
+        prev.map((booking) =>
+          booking.id === bookingId ? { ...booking, status: 'cancelled' } : booking
+        )
+      );
+    }
+  };
+
+  // Request refund: cancels booking + creates refund record
   const handleRequestRefund = (booking) => {
     // Mark booking as cancelled
     handleCancelBooking(booking.id);
@@ -126,7 +127,7 @@ const PassengerDashboard = () => {
       route: booking.route,
       amount: booking.route.price,
       status: 'pending',
-      requestedAt: new Date().toISOString()
+      requestedAt: new Date().toISOString(),
     };
 
     // Save to localStorage
@@ -135,33 +136,14 @@ const PassengerDashboard = () => {
     const updatedRefunds = [...allRefunds, newRefund];
     localStorage.setItem('refunds', JSON.stringify(updatedRefunds));
 
-    // Update local state
-    setRefunds(prev => [...prev, newRefund]);
-    setActiveTab('refunds');
-  };
-
->>>>>>> 7818c94 (Continuing development from another PC)
-  const handleCancelBooking = (bookingId) => {
-    // Update booking status
-    const savedBookings = localStorage.getItem('bookings');
-    if (savedBookings) {
-      const allBookings = JSON.parse(savedBookings);
-      const updatedBookings = allBookings.map((booking) =>
-        booking.id === bookingId ? { ...booking, status: 'cancelled' } : booking
-      );
-      localStorage.setItem('bookings', JSON.stringify(updatedBookings));
-
-      // Update local state
-      setBookings(prev => prev.map(booking =>
-        booking.id === bookingId ? { ...booking, status: 'cancelled' } : booking
-      ));
-    }
+    // Update local state only for current user
+    setRefunds((prev) => [...prev, newRefund]);
   };
 
   return (
     <Layout showFooter={false}>
       <div className="min-h-screen bg-gray-50">
-        {/* Page Header */}
+        {/* Header */}
         <div className="bg-white shadow-sm border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="flex items-center justify-between">
@@ -189,18 +171,15 @@ const PassengerDashboard = () => {
           </div>
         </div>
 
+        {/* Main panel */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Navigation Tabs */}
           <div className="mb-8">
             <nav className="flex space-x-8">
               {[
                 { id: 'book', label: 'Book Ticket', icon: Plus },
-<<<<<<< HEAD
-                { id: 'bookings', label: 'My Bookings', icon: Calendar }
-=======
                 { id: 'bookings', label: 'My Bookings', icon: Calendar },
-                { id: 'refunds', label: 'Refunds', icon: CreditCard }
->>>>>>> 7818c94 (Continuing development from another PC)
+                { id: 'refunds', label: 'Refunds', icon: CreditCard },
               ].map((tab) => {
                 const Icon = tab.icon;
                 return (
@@ -301,11 +280,13 @@ const PassengerDashboard = () => {
                             <span className="font-medium text-lg">
                               {booking.route.from} → {booking.route.to}
                             </span>
-                            <span className={`ml-4 px-2 py-1 text-xs font-semibold rounded-full ${
-                              booking.status === 'confirmed' 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-red-100 text-red-800'
-                            }`}>
+                            <span
+                              className={`ml-4 px-2 py-1 text-xs font-semibold rounded-full ${
+                                booking.status === 'confirmed'
+                                  ? 'bg-green-100 text-green-800'
+                                  : 'bg-red-100 text-red-800'
+                              }`}
+                            >
                               {booking.status.toUpperCase()}
                             </span>
                           </div>
@@ -329,29 +310,22 @@ const PassengerDashboard = () => {
                           </div>
                           <div className="mt-4 flex items-center justify-between">
                             <div className="text-lg font-bold text-green-600">
-                              ₹{booking.route.price}
+                              Rs.{booking.route.price}
                             </div>
                             <div className="text-sm text-gray-500">
                               Booked on: {new Date(booking.bookingDate).toLocaleDateString()}
                             </div>
                           </div>
                         </div>
+                        {/* Only show refund button if booking is confirmed */}
                         {booking.status === 'confirmed' && (
                           <button
-<<<<<<< HEAD
-                            onClick={() => handleCancelBooking(booking.id)}
-                            className="ml-4 text-red-600 hover:text-red-800 p-2 rounded-md hover:bg-red-50 transition-colors"
-                            title="Cancel Booking"
-                          >
-                            <Trash2 className="h-5 w-5" />
-=======
                             onClick={() => handleRequestRefund(booking)}
                             className="ml-4 text-red-600 hover:text-red-800 p-2 rounded-md hover:bg-red-50 transition-colors"
                             title="Request Refund"
                           >
                             <Trash2 className="h-5 w-5" />
                             <span className="ml-2 text-xs">Request Refund</span>
->>>>>>> 7818c94 (Continuing development from another PC)
                           </button>
                         )}
                       </div>
@@ -361,8 +335,6 @@ const PassengerDashboard = () => {
               )}
             </div>
           )}
-<<<<<<< HEAD
-=======
 
           {/* Refunds Tab */}
           {activeTab === 'refunds' && (
@@ -390,13 +362,15 @@ const PassengerDashboard = () => {
                             Requested on: {new Date(refund.requestedAt).toLocaleDateString()}
                           </div>
                         </div>
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          refund.status === 'pending'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : refund.status === 'approved'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-red-100 text-red-800'
-                        }`}>
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                            refund.status === 'pending'
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : refund.status === 'approved'
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-red-100 text-red-800'
+                          }`}
+                        >
                           {refund.status.toUpperCase()}
                         </span>
                       </div>
@@ -406,7 +380,6 @@ const PassengerDashboard = () => {
               )}
             </div>
           )}
->>>>>>> 7818c94 (Continuing development from another PC)
         </div>
 
         {/* Booking Form Modal */}
@@ -437,7 +410,7 @@ const PassengerDashboard = () => {
               to: selectedRoute.to,
               passengerName: pendingBooking.passengerName,
               seatNumber: pendingBooking.seatNumber,
-              travelDate: pendingBooking.travelDate
+              travelDate: pendingBooking.travelDate,
             }}
           />
         )}
@@ -446,15 +419,14 @@ const PassengerDashboard = () => {
   );
 };
 
-
-// BookingFormModal remains here for now, but should be extracted to its own file for clarity.
+// BookingFormModal as you had
 const BookingFormModal = ({ route, onSubmit, onClose }) => {
   const [formData, setFormData] = useState({
     passengerName: '',
     passengerPhone: '',
     seatNumber: '',
     travelDate: '',
-    routeId: route.id
+    routeId: route.id,
   });
 
   const handleSubmit = (e) => {
@@ -465,7 +437,7 @@ const BookingFormModal = ({ route, onSubmit, onClose }) => {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -524,7 +496,7 @@ const BookingFormModal = ({ route, onSubmit, onClose }) => {
               required
             >
               <option value="">Select a seat</option>
-              {seatOptions.map(seat => (
+              {seatOptions.map((seat) => (
                 <option key={seat} value={seat}>Seat {seat}</option>
               ))}
             </select>
